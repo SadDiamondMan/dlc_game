@@ -1,5 +1,5 @@
 ---@class WorldCutscene : WorldCutscene
-local WorldCutscene, super = Utils.hookScript(WorldCutscene)
+local WorldCutscene, super = HookSystem.hookScript(WorldCutscene)
 
 local function waitForTextbox(self) return not self.textbox or self.textbox:isDone() end
 

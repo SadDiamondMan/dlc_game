@@ -28,11 +28,11 @@ function shopwriter_board:update()
 	end
 	local cola, rowa = board:getArea(board.player.x, board.player.y - 1)
 	local colb, rowb = board:getArea(self.x, self.y)
-	if self.text_active and (cola ~= colb or rowa ~= rowb or Game.world.map.swapping_grid or self.world.fader.state ~= "NONE" or self.world.fader.tilescovered > 0) then
+	if self.text_active and (cola ~= colb or rowa ~= rowb or board.swapping_grid or self.world.fader.state ~= "NONE" or self.world.fader.tilescovered > 0) then
 		self.text_active = false
 		self:setText("")
 		self.advance_snd = true
-	elseif not self.text_active and cola == colb and rowa == rowb and not Game.world.map.swapping_grid and self.world.fader.state == "NONE" and self.world.fader.tilescovered <= 0 then
+	elseif not self.text_active and cola == colb and rowa == rowb and not board.swapping_grid and self.world.fader.state == "NONE" and self.world.fader.tilescovered <= 0 then
 		self.text_active = true
 		self:setText(self.text)
 		self.advance_snd = false

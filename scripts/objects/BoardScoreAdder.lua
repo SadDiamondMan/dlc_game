@@ -17,11 +17,11 @@ function BoardScoreAdder:update()
 
     if not self.score_init then
         self.scoreleft = self.scoreamount
-        self.mysign = Utils.sign(self.scoreamount)
+        self.mysign = MathUtils.sign(self.scoreamount)
         self.score_init = true
 
         if self.mysign < 0 then
-            Game.board.ui.score_bar.sprite:setColor(Utils.hexToRgb"#E33D47")
+            Game.board.ui.score_bar.sprite:setColor(ColorUtils.hexToRGB("#E33D47"))
             Game.board.ui.score_bar:shake()
         end
 
@@ -36,36 +36,39 @@ function BoardScoreAdder:update()
     else
         self.timer = self.timer + (1 * DTMULT)
 
-        if self.scoreleft ~= 0 then
-            if self.scoreleft > 0 then
-                Assets.playSound(self.mysnd, nil, 1)
-            end
-            if self.scoreleft < 0 then
-                Assets.playSound(self.mysnd, nil, 0.8)
-            end
+		if self.timer >= 1 then
+			if self.scoreleft ~= 0 then
+				if self.scoreleft > 0 then
+					Assets.playSound(self.mysnd, nil, 1)
+				end
+				if self.scoreleft < 0 then
+					Assets.playSound(self.mysnd, nil, 0.8)
+				end
 
-            if self.mysign > 0 then
-                if self.scoreleft > self.modamt then
-                    self.scoreleft = self.scoreleft - (self.modamt * DTMULT)
-                    Game:setFlag("points", Game:getFlag("points") + self.modamt)
-                else
-                    Game:setFlag("points", Game:getFlag("points") + self.scoreleft)
-                    self.scoreleft = 0
-                end
-            end
-            if self.mysign < 0 then
-                if self.scoreleft < -self.modamt then
-                    self.scoreleft = self.scoreleft + (self.modamt * DTMULT)
-                    Game:setFlag("points", Game:getFlag("points") - self.modamt)
-                else
-                    Game:setFlag("points", Game:getFlag("points") + self.scoreleft)
-                    self.scoreleft = 0
-                end
-            end
-        else
-            Game.board.ui.score_bar.sprite:setColor(COLORS.white)
-            self:remove()
-        end
+				if self.mysign > 0 then
+					if self.scoreleft > self.modamt then
+						self.scoreleft = self.scoreleft - self.modamt
+						Game:setFlag("points", Game:getFlag("points") + self.modamt)
+					else
+						Game:setFlag("points", Game:getFlag("points") + self.scoreleft)
+						self.scoreleft = 0
+					end
+				end
+				if self.mysign < 0 then
+					if self.scoreleft < -self.modamt then
+						self.scoreleft = self.scoreleft + self.modamt
+						Game:setFlag("points", Game:getFlag("points") - self.modamt)
+					else
+						Game:setFlag("points", Game:getFlag("points") + self.scoreleft)
+						self.scoreleft = 0
+					end
+				end
+			else
+				Game.board.ui.score_bar.sprite:setColor(COLORS.white)
+				self:remove()
+			end
+			self.timer = 0
+		end
     end
 end
 

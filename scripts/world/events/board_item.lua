@@ -6,8 +6,10 @@ function board_item:init(data)
     self.id = self.data.properties['id'] or "test_item"
     self.spr = self.data.properties['sprite'] or "sword/ui/inventory/test_item"
     self.name = self.data.properties['name'] or "NESS"
-    self.text = self.data.properties['text'] or "THE [color:yellow]".. self.name .."[color:reset]!"
+    self.text = self.data.properties['text'] or "YOU GOT THE [color:yellow]".. self.name .."[color:reset]!"
+    self.moretext = TiledUtils.parsePropertyMultiList("moretext", self.data.properties) or nil
     self.slot = self.data.properties['slot'] or 0
+	self.amt = self.data.properties['amount'] or 1
     self.sound = self.data.properties['sound'] or "board/itemget"
 
     self.shop = self.data.properties['shop'] or nil
@@ -23,12 +25,16 @@ function board_item:init(data)
 	end
 	
 	if self.id == "keycount" then
-		self.text = self.data.properties['text'] or "[color:yellow]KEY[color:reset] x1"
+		self.text = self.data.properties['text'] or "YOU GOT [color:yellow]KEY[color:reset] x1"
 	elseif self.id == "qcount" then
-		self.text = self.data.properties['text'] or "[color:yellow]Q[color:reset] x1"
+		self.text = self.data.properties['text'] or "YOU GOT [color:yellow]Q[color:reset] x1"
 		self.glow = self.data.properties['glow'] or true
 	elseif self.id == "lancer" then
-		self.text = self.data.properties['text'] or "[color:yellow]LANCER[color:reset]!"
+		self.text = self.data.properties['text'] or "YOU GOT [color:yellow]LANCER[color:reset]!"
+	elseif self.id == "camera" then
+		self.text = self.data.properties['text'] or "YOU GOT THE [color:yellow]CAMERA[color:reset]!"
+		self.moretext[1] = self.moretext and self.moretext[1] or "PRESS [color:yellow]"..Input.getText("confirm").."[color:reset] TO TAKE A PICTURE!"
+		self.amt = self.data.properties['amount'] or 0
 	end
 	self.makestars = false
 	self.makestarstimer = 0
@@ -37,6 +43,8 @@ function board_item:init(data)
 	self.glowsiner = 0
     self.color_mask = self.sprite:addFX(ColorMaskFX(COLORS.white, 0))
     self.color_mask.amount = 0
+	self.true_x = self.x
+	self.true_y = self.y
 end
 
 function board_item:update()
@@ -110,7 +118,7 @@ function board_item:pickup()
 	local p = Game.world.board.player
 	local cutscene = Game.world:startCutscene(function(c)
 		if self.id == "lancer" and i.lancer > 0 then
-			self.text = self.data.properties['text'] or "ANOTHER [color:yellow]LANCER[color:reset]!"
+			self.text = self.data.properties['text'] or "YOU GOT ANOTHER [color:yellow]LANCER[color:reset]!"
 		end
 		if self.price and self.shop then
 			if Game:getFlag("points") >= tonumber(self.price) then
@@ -147,14 +155,19 @@ function board_item:pickup()
 		c:wait(12/30)
 		Assets.playSound(self.sound)
 		self.makestars = true
-		c:boardText("YOU GOT "..self.text)
+		c:boardText(self.text) 
+		if self.moretext then
+            for _,line in ipairs(self.moretext) do
+                c:boardText(line)
+            end
+		end
 		c:resetBoardText()
 		self.collider.collidable = false
 		p:resetSprite()
 		self.makestars = false
 		if self.slot ~= -1 then
 			self.visible = false
-			local xx, yy = self:localToScreenPos(0, 0)
+			local xx, yy = self:localToScreenPos(Game.world.board.off_x, Game.world.board.off_y)
 			self.item_sprite = Sprite(self.spr, xx, yy)
 			self.item_sprite:setOrigin(0)
 			self.item_sprite:setScale(2)
@@ -185,6 +198,20 @@ function board_item:pickup()
 	end)
 
 	return true
+end
+
+function board_item:preDraw()
+	self.true_x = self.x
+	self.true_y = self.y
+	self.x = MathUtils.round(self.x / 2) * 2
+	self.y = MathUtils.round(self.y / 2) * 2
+	super.preDraw(self)
+end
+
+function board_item:postDraw()
+	super.postDraw(self)
+	self.x = self.true_x
+	self.y = self.true_y
 end
 
 function board_item:draw()

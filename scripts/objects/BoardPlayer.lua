@@ -100,8 +100,17 @@ function BoardPlayer:init(chara, x, y)
     self.rec_up = {}
     self.rec_down = {}
     self.recording = {["left"] = self.rec_left, ["right"] = self.rec_right, ["up"] = self.rec_up, ["down"] = self.rec_down}
+	
+	self.boardgrid = true
+	self.bcamera = true
+	self.mycam = nil
+	self.cant_photo_icon = nil
+	self.cant_photo_timer_1 = nil
+	self.cant_photo_timer_2 = nil
+	self.true_x = self.x
+	self.true_y = self.y
+	self.cambuff = 0
 end
-
 
 function BoardPlayer:saveMovement()
     love.filesystem.write("rec.json", JSON.encode(self.recording))
@@ -461,6 +470,64 @@ function BoardPlayer:characterAction()
     local name = id..""..id
 
     if name == id.."kris" then    -- nothing (unless you've obtained the sword or camera)
+		self.bcamera = false
+		if Game.world.board.ui.inventory_bar and Game.world.board.ui.inventory_bar.inventory["camera"] then
+			self.bcamera = true
+		end
+		local camwidth = 4
+		local camheight = 3
+		local can_photo = true
+		local make_sign = true
+		if self.world:checkCameraBlockerCollision(self.collider) then
+			can_photo = false
+		end
+		for _,camsolid in ipairs(self.stage:getObjects(BoardCamSolid)) do
+            if camsolid.camblock_collider and self:collidesWith(camsolid.camblock_collider) then
+                can_photo = false
+			end
+		end
+		if self.bcamera and not Game.world.board:hasCutscene() and (not self.mycam or self.mycam:isRemoved()) and self.cambuff <= 0 then
+			if can_photo then
+				local playxround = MathUtils.round((self.x - 16) / 32) * 32
+				local playyround = MathUtils.round((self.y - 32) / 32) * 32
+				playxround = playxround - (camwidth / 2) * 32
+				playyround = playyround - (camheight / 2) * 32
+				playxround = MathUtils.round(playxround / 32) * 32
+				playyround = MathUtils.round(playyround / 32) * 32
+				self.mycam = BoardPlayerCamera(playxround, playyround, camwidth, camheight)
+				self.parent:addChild(self.mycam)
+			elseif make_sign then 
+				if self.cant_photo_icon then self.cant_photo_icon:remove() end
+				if self.cant_photo_timer_1 then
+					Game.world.timer:cancel(self.cant_photo_timer_1)
+					self.cant_photo_timer_1 = nil
+				end
+				if self.cant_photo_timer_2 then
+					Game.world.timer:cancel(self.cant_photo_timer_2)
+					self.cant_photo_timer_2 = nil
+				end
+				self.cant_photo_icon = BoardSprite("sword/effects/nophoto", self.x, self.y - 24)
+				self.cant_photo_icon:setScale(2)
+				self.cant_photo_icon:play(1/5)
+				self.cant_photo_icon:setFrame(2)
+				self.cant_photo_icon:setOrigin(0.5, 1)
+				self.cant_photo_icon.physics.speed_y = -2.8
+				self.cant_photo_icon.physics.gravity = 0.2
+				self.cant_photo_icon.layer = 100
+				if self.cant_photo_icon.y <= 64 then
+					self.cant_photo_icon.y = 64
+				end
+				self.parent:addChild(self.cant_photo_icon)
+				self.cant_photo_timer_1 = Game.world.timer:after(15/30, function()
+					self.cant_photo_icon.physics.gravity = 0
+					self.cant_photo_icon.physics.speed_y = 0
+				end)
+				self.cant_photo_timer_2 = Game.world.timer:after(20/30, function()
+					self.cant_photo_icon:remove()
+				end)
+				Assets.stopAndPlaySound("error")
+			end
+		end
         return
     end
     if name == id.."susie" then   -- grab and throw
@@ -478,7 +545,7 @@ function BoardPlayer:characterAction()
                 self.x, self.y = self.stool_x, self.stool_y
 
                 --creates a "pushblock_board" event
-                self.stool = Game.world.board:spawnObject(Registry.createEvent("pushblock_board", {
+                self.stool = Game.world.board:spawnObject(Registry.createLegacyEvent("pushblock_board", {
                     x = self.stool_x, 
                     y =  self.stool_y, 
                     properties = { 
@@ -556,6 +623,10 @@ end
 function BoardPlayer:update()
     if self.hurt_timer > 0 then
         self.hurt_timer = MathUtils.approach(self.hurt_timer, 0, DTMULT)
+    end 
+
+	if self.cambuff > 0 then
+        self.cambuff = self.cambuff - DTMULT
     end
 
     if self.iframes > -5 then
@@ -601,6 +672,22 @@ function BoardPlayer:update()
     end
 
     super.update(self)
+end
+
+function BoardPlayer:preDraw()
+	self.true_x = self.x
+	self.true_y = self.y
+	if self.boardgrid then
+		self.x = MathUtils.round(self.x / 2) * 2
+		self.y = MathUtils.round(self.y / 2) * 2
+	end
+	super.preDraw(self)
+end
+
+function BoardPlayer:postDraw()
+	super.postDraw(self)
+	self.x = self.true_x
+	self.y = self.true_y
 end
 
 function BoardPlayer:draw()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="72" height="48" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="229">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="72" height="48" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="260">
  <editorsettings>
   <export target="world_test_map.lua" format="lua"/>
  </editorsettings>
@@ -343,6 +343,25 @@
    </properties>
   </object>
   <object id="228" name="raft_board" x="1024" y="960" width="32" height="32"/>
+  <object id="233" name="b3tennablossom" x="531" y="258" width="52" height="30"/>
+  <object id="237" name="board_grabbablegrass" x="512" y="896" width="32" height="32"/>
+  <object id="241" name="board_grabbablegrass" x="544" y="896" width="32" height="32"/>
+  <object id="243" name="board_grabbablegrass" x="576" y="896" width="32" height="32"/>
+  <object id="244" name="board_grabbablegrass" x="608" y="896" width="32" height="32"/>
+  <object id="245" name="board_grabbablegrass" x="512" y="928" width="32" height="32"/>
+  <object id="246" name="board_grabbablegrass" x="544" y="928" width="32" height="32"/>
+  <object id="247" name="board_grabbablegrass" x="576" y="928" width="32" height="32"/>
+  <object id="248" name="board_grabbablegrass" x="608" y="928" width="32" height="32"/>
+  <object id="249" name="board_grabbablegrass" x="512" y="960" width="32" height="32"/>
+  <object id="250" name="board_grabbablegrass" x="544" y="960" width="32" height="32"/>
+  <object id="251" name="board_grabbablegrass" x="576" y="960" width="32" height="32"/>
+  <object id="252" name="board_grabbablegrass" x="608" y="960" width="32" height="32"/>
+  <object id="253" name="board_grabbablegrass" x="864" y="928" width="32" height="32"/>
+  <object id="254" name="board_grabbablegrass" x="896" y="928" width="32" height="32"/>
+  <object id="255" name="board_grabbablegrass" x="928" y="928" width="32" height="32"/>
+  <object id="256" name="board_grabbablegrass" x="864" y="960" width="32" height="32"/>
+  <object id="257" name="board_grabbablegrass" x="896" y="960" width="32" height="32"/>
+  <object id="258" name="board_grabbablegrass" x="928" y="960" width="32" height="32"/>
  </objectgroup>
  <objectgroup color="#ff00ff" id="2" name="objects_party">
   <object id="57" name="pushblock_board" x="1312" y="896" width="32" height="32"/>
@@ -429,11 +448,12 @@ IS FREE TO FRIENDS!</property>
   </object>
   <object id="195" name="board_item" x="1376" y="384" width="32" height="32">
    <properties>
+    <property name="amount" type="int" value="0"/>
     <property name="id" value="test_item"/>
     <property name="name" value="NESS"/>
     <property name="slot" value="2"/>
     <property name="sprite" value="sword/ui/inventory/test_item"/>
-    <property name="text" value="[color:yellow]NESS[color:reset]!"/>
+    <property name="text" value="YOU GOT [color:yellow]NESS[color:reset]!"/>
    </properties>
   </object>
   <object id="196" name="board_item" x="944" y="1056" width="32" height="32">
@@ -456,6 +476,7 @@ IS FREE TO FRIENDS!</property>
   </object>
   <object id="198" name="board_item" x="2192" y="153" width="32" height="32">
    <properties>
+    <property name="amount" type="int" value="0"/>
     <property name="id" value="cloak"/>
     <property name="name" value="???"/>
     <property name="price" value="9999"/>
@@ -463,7 +484,7 @@ IS FREE TO FRIENDS!</property>
     <property name="slot" type="int" value="4"/>
     <property name="sound" value="board/itemget_bad"/>
     <property name="sprite" value="sword/party/noelle/walk/down_1"/>
-    <property name="text" value="[color:yellow]HER[color:reset]"/>
+    <property name="text" value="YOU GOT [color:yellow]HER[color:reset]"/>
     <property name="waitfortext" type="bool" value="false"/>
    </properties>
   </object>
@@ -497,6 +518,21 @@ IS FREE TO FRIENDS!</property>
    <properties>
     <property name="randframe" type="bool" value="true"/>
     <property name="sprite" value="world/events/sword/cactus"/>
+   </properties>
+  </object>
+  <object id="231" name="board_camsolid" x="256" y="640" width="32" height="32"/>
+  <object id="232" name="b3gameshow_tvseq" x="168" y="1336" width="48" height="30"/>
+  <object id="235" name="board_boulderdropper" x="392" y="264" width="32" height="30"/>
+  <object id="236" name="board_camsolid" x="256" y="672" width="32" height="32"/>
+  <object id="259" name="board_item" x="2016" y="152" width="32" height="32">
+   <properties>
+    <property name="id" value="camera"/>
+    <property name="name" value="CAMERA"/>
+    <property name="price" value="0"/>
+    <property name="shop" type="object" value="86"/>
+    <property name="slot" type="int" value="3"/>
+    <property name="sprite" value="sword/ui/inventory/camera"/>
+    <property name="waitfortext" type="bool" value="false"/>
    </properties>
   </object>
  </objectgroup>

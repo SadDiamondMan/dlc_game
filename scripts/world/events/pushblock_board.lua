@@ -70,6 +70,8 @@ function PushBlockBoard:init(data, x, y, shape, sprite, solved_sprite)
     local sprite_b = properties["sprite"] or sprite or "world/events/sword/pushableblock"
     self.carry = Sprite(sprite_b)
     self.carry.y = -12
+	self.true_x = self.x
+	self.true_y = self.y
 end
 
 
@@ -312,5 +314,19 @@ end
 
 --- *(Override)* Called when the block is reset
 function PushBlockBoard:onReset() end
+
+function PushBlockBoard:preDraw()
+	self.true_x = self.x
+	self.true_y = self.y
+	self.x = MathUtils.round(self.x / 2) * 2
+	self.y = MathUtils.round(self.y / 2) * 2
+	super.preDraw(self)
+end
+
+function PushBlockBoard:postDraw()
+	super.postDraw(self)
+	self.x = self.true_x
+	self.y = self.true_y
+end
 
 return PushBlockBoard

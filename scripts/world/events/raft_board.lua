@@ -20,6 +20,8 @@ function RaftBoard:init(data)
     self.moved = 0
     self.noclip = false
     self.enemy_collision = false
+	self.true_x = self.x
+	self.true_y = self.y
 end
 
 function RaftBoard:onInteract(player, dir)
@@ -218,6 +220,20 @@ end
 
 function RaftBoard:isCameraAttachable()
     return
+end
+
+function RaftBoard:preDraw()
+	self.true_x = self.x
+	self.true_y = self.y
+	self.x = MathUtils.round(self.x / 2) * 2
+	self.y = MathUtils.round(self.y / 2) * 2
+	super.preDraw(self)
+end
+
+function RaftBoard:postDraw()
+	super.postDraw(self)
+	self.x = self.true_x
+	self.y = self.true_y
 end
 
 return RaftBoard

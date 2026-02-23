@@ -48,12 +48,14 @@
 local BoardWorld, super = Class(Object)
 
 ---@param map? string    The optional name of a map to initially load with the world
-function BoardWorld:init(map, x, y)
+function BoardWorld:init(map, x, y, offx, offy, swidth, sheight)
     super.init(self)
     self.world = self
     Game.world.board = self
     Game.board = self
-    self.camera = Camera(self, 0,0,384,256)
+	self.screen_width = swidth or 384
+	self.screen_height = sheight or 256
+    self.camera = Camera(self, 0,0,self.screen_width,self.screen_height)
     -- states: GAMEPLAY, FADING, MENU
     self.state = "" -- Make warnings shut up, TODO: fix this
     self.state_manager = StateManager("GAMEPLAY", self, true)
@@ -67,7 +69,7 @@ function BoardWorld:init(map, x, y)
     self.height = self.map.height * self.map.tile_height
 
     self:moveCamera((x or 0), (y or 0))
-    self.x, self.y = 128, 64
+    self.off_x, self.off_y = offx or 128, offy or 64
 
     self.player = nil
     self.soul = nil
@@ -113,18 +115,16 @@ function BoardWorld:init(map, x, y)
     if map then
         self:loadMap(map)
     end
-    -- self:addFX(MaskFX(self))
-    self:addFX(CRTShaderFX("crt", {
-        ["vignette_scale"] = 0.2,
-        ["vignette_intensity"] = math.pow(1.5, 1.5 - 0.2) * 18,
-        ["chromatic_scale"] = 0.5,
-        ["filter_amount"] = 0.1,
-        ["time"] = function () return ((Kristal.getTime() * 30)/2) % 3 end,
-        ["texsize"] = {1/self.camera.width, 1/self.camera.height},
-    }))
-	
+
 	self.rafting = false
 	self.targets_can_update_cam = true
+	self.swapping_grid = false
+	self.grayregion = nil
+	self.chromstrength = 0.5
+	self.crt_glitch = 0
+	self.crttimer = 0
+	self.crtshader = Assets.getShader("crt")
+	self.grayshader = Assets.getShader("grayscalesand")
 end
 
 --- Heals a member of the party
@@ -372,6 +372,7 @@ function BoardWorld:onKeyPressed(key)
                 Input.clear("confirm")
             else
                 self.ui:characterAction()
+                self.ui:characterAction()
             end
         end
     end
@@ -384,7 +385,8 @@ end
 --- Checks whether there is currently a textbox open
 ---@return boolean
 function BoardWorld:isTextboxOpen()
-    return self:hasCutscene() and self.cutscene.textbox and self.cutscene.textbox.stage ~= nil
+    return (self:hasCutscene() and self.cutscene.textbox and self.cutscene.textbox.stage ~= nil) or 
+	(Game.world:hasCutscene() and Game.world.cutscene.textbox and Game.world.cutscene.textbox.stage ~= nil)
 end
 
 --- Gets the collision map for the world
@@ -418,6 +420,23 @@ end
 function BoardWorld:checkCollision(collider, enemy_check)
     Object.startCache()
     for _,other in ipairs(self:getCollision(enemy_check)) do
+        if collider:collidesWith(other) and collider ~= other then
+            Object.endCache()
+            return true, other.parent
+        end
+    end
+    Object.endCache()
+    return false
+end
+
+--- Checks whether the input `collider` is colliding with anything in the world
+---@param collider      Collider    The collider to check collision for
+---@param enemy_check?  boolean     Whether to include the enemy collision map in the check
+---@return boolean  collided    Whether a collision was found
+---@return Object?  with        The object that was collided with
+function BoardWorld:checkCameraBlockerCollision(collider)
+    Object.startCache()
+    for _,other in ipairs(self.map.camera_blocker_area) do
         if collider:collidesWith(other) and collider ~= other then
             Object.endCache()
             return true, other.parent
@@ -1285,6 +1304,57 @@ function BoardWorld:update()
     end
 end
 
+function BoardWorld:fullDraw(...)
+    self.main_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
+    super.fullDraw(self)
+    Draw.popCanvas(true)
+    Draw.setColor(1, 1, 1)
+	local crt_canvas = Draw.pushCanvas(self.screen_width, self.screen_height)
+    Draw.drawCanvas(self.main_canvas)
+	local drawgray = true
+	if self:isTextboxOpen() then
+		drawgray = false
+	end
+	if drawgray then
+		for _, region in ipairs(self.stage:getObjects(BoardGrayRegion)) do
+			if region and not region:isRemoved() then
+				local regionx, regiony = region:getScreenPos(0, 0)
+				Draw.pushScissor()
+				Draw.scissor(regionx, regiony, region.width, region.height)
+				self.grayshader:send("sand1", {255, 236, 189})
+				self.grayshader:send("sand2", {255, 215, 140})
+				self.grayshader:send("sand3", {151, 183, 255})
+				self.grayshader:send("sand4", {177, 193, 227})
+				self.grayshader:sendColor("sandcol", {0.82, 0.82, 0.82})
+				local last_shader = love.graphics.getShader()
+				love.graphics.setShader(self.grayshader)
+				Draw.drawCanvas(self.main_canvas)
+				love.graphics.setShader(last_shader)
+				Draw.popScissor()
+			end
+		end
+	end
+    Draw.popCanvas(true)
+	self.crttimer = (self.crttimer + 0.5 * DTMULT) % 3
+	local vig = self.crt_glitch > 0 and (0.2 + MathUtils.random(MathUtils.clamp(self.crt_glitch / 200, 0, 0.1))) or 0.2
+	local vigint = math.pow(1.5, 1.5 - vig) * 18
+	local chrom_scale = self.crt_glitch > 0 and (MathUtils.randomInt(-4, 4) * MathUtils.clamp(self.crt_glitch / 5, 1, 5)) or self.chromstrength
+	if chrom_scale == 0 then
+		chrom_scale = 1
+	end
+	local filteramount = 0.1 + math.min(self.crt_glitch / 100, 0.1)
+	self.crtshader:send("vignette_scale", vig)
+	self.crtshader:send("vignette_intensity", vigint)
+	self.crtshader:send("chromatic_scale", chrom_scale)
+	self.crtshader:send("filter_amount", filteramount)
+	self.crtshader:send("time", self.crttimer)
+	self.crtshader:send("texsize", {1/self.screen_width, 1/self.screen_height})
+	local last_shader = love.graphics.getShader()
+	love.graphics.setShader(self.crtshader)
+    Draw.drawCanvas(crt_canvas, self.off_x, self.off_y)
+	love.graphics.setShader(last_shader)
+end
+
 function BoardWorld:draw()
     -- Draw background
     Draw.setColor(self.map.bg_color or {0, 0, 0, 0})
@@ -1294,7 +1364,7 @@ function BoardWorld:draw()
     super.draw(self)
 
     self.map:draw()
-
+	
     if DEBUG_RENDER then
         for _,collision in ipairs(self.map.collision) do
             collision:draw(0, 0, 1, 0.5)
@@ -1368,9 +1438,13 @@ function BoardWorld:shiftGrid(direction, after)
     elseif direction == "left" then
 		self.timer:tween(0.5, self:getCameraTarget(), {x = x2})
     end
+	self.future_area_column, self.future_area_row = x, y
+	self.swapping_grid = true
 	self.camera:panTo(cx, cy, 0.5, "linear", function ()
         if after and after(self) then return end
         Game.lock_movement = false
+		self.swapping_grid = false
+		self.player.cambuff = 2
         self.area_column, self.area_row = x, y
         if direction == "up" then
             self:snapPlayer("bottom", self:getAreaPosition(x, y))
@@ -1392,19 +1466,20 @@ end
 ---@param x integer
 ---@param y integer
 function BoardWorld:moveCamera(x, y) --Faking the camera again
-    local cam_x = (x + 0.5) * 384
-    local cam_y = (y + 0.5) * 256
+    local cam_x = (x + 0.5) * self.screen_width
+    local cam_y = (y + 0.5) * self.screen_height
     self.camera.x = cam_x
     self.camera.y = cam_y
     self.area_column, self.area_row = x, y
+	self.future_area_column, self.future_area_row = x, y
 end
 
 ---@param x integer
 ---@param y integer
 ---@return number, number
 function BoardWorld:getAreaCenter(x,y)
-    return (x + 0.5) * 384,
-           (y + 0.5) * 256
+    return (x + 0.5) * self.screen_width,
+           (y + 0.5) * self.screen_height
 end
 
 function BoardWorld:getArea(x, y)
@@ -1462,11 +1537,11 @@ end
 ---@param y integer Column of area to get bounds of
 ---@return number, number
 function BoardWorld:getAreaPosition(x, y)
-    assert(x == math.floor(x), "Non-integer x value passed: "..x)
-    assert(y == math.floor(y), "Non-integer y value passed: "..y)
     if not x then
         x, y = self.area_column, self.area_row
     end
+    assert(x == math.floor(x), "Non-integer x value passed: "..x)
+    assert(y == math.floor(y), "Non-integer y value passed: "..y)
     return x * self.camera.width, y * self.camera.height
 end
 
@@ -1480,7 +1555,7 @@ end
 
 function BoardWorld:drawMask()
     love.graphics.origin()
-    love.graphics.rectangle("fill",128,64,384,256)
+    love.graphics.rectangle("fill",self.x,self.y,self.screen_width,self.screen_height)
 end
 
 --- Returns the nearest valid pathfinding node, based on the map's `node_size`.
