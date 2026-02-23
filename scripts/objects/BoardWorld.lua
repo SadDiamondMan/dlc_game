@@ -436,7 +436,7 @@ end
 ---@return Object?  with        The object that was collided with
 function BoardWorld:checkCameraBlockerCollision(collider)
     Object.startCache()
-    for _,other in ipairs(self:getCollision(self.map.camera_blocker_area)) do
+    for _,other in ipairs(self.map.camera_blocker_area) do
         if collider:collidesWith(other) and collider ~= other then
             Object.endCache()
             return true, other.parent

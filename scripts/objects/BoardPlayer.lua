@@ -482,7 +482,7 @@ function BoardPlayer:characterAction()
 			can_photo = false
 		end
 		for _,camsolid in ipairs(self.stage:getObjects(BoardCamSolid)) do
-            if self:collidesWith(camsolid.camblock_collider) then
+            if camsolid.camblock_collider and self:collidesWith(camsolid.camblock_collider) then
                 can_photo = false
 			end
 		end
