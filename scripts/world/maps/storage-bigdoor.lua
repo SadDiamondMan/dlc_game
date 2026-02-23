@@ -1,7 +1,7 @@
 return {
-  version = "1.11",
+  version = "1.10",
   luaversion = "5.1",
-  tiledversion = "1.11.2",
+  tiledversion = "1.10.2",
   class = "",
   orientation = "orthogonal",
   renderorder = "right-down",
@@ -19,155 +19,19 @@ return {
     {
       name = "castle",
       firstgid = 1,
-      class = "",
-      tilewidth = 40,
-      tileheight = 40,
-      spacing = 0,
-      margin = 0,
-      columns = 4,
-      image = "../../../assets/sprites/tilesets/castle.png",
-      imagewidth = 160,
-      imageheight = 400,
-      objectalignment = "unspecified",
-      tilerendersize = "tile",
-      fillmode = "stretch",
-      tileoffset = {
-        x = 0,
-        y = 0
-      },
-      grid = {
-        orientation = "orthogonal",
-        width = 40,
-        height = 40
-      },
-      properties = {},
-      wangsets = {},
-      tilecount = 40,
-      tiles = {
-        {
-          id = 24,
-          animation = {
-            {
-              tileid = 24,
-              duration = 500
-            },
-            {
-              tileid = 39,
-              duration = 500
-            }
-          }
-        }
-      }
+      filename = "../tilesets/castle.tsx",
+      exportfilename = "../tilesets/castle.lua"
     },
     {
       name = "board",
       firstgid = 41,
-      class = "",
-      tilewidth = 320,
-      tileheight = 240,
-      spacing = 0,
-      margin = 0,
-      columns = 0,
-      objectalignment = "unspecified",
-      tilerendersize = "tile",
-      fillmode = "stretch",
-      tileoffset = {
-        x = 0,
-        y = 0
-      },
-      grid = {
-        orientation = "orthogonal",
-        width = 1,
-        height = 1
-      },
-      properties = {},
-      wangsets = {},
-      tilecount = 9,
-      tiles = {
-        {
-          id = 7,
-          image = "../../../assets/sprites/world/maps/tvland/board/gameshow_console.png",
-          width = 50,
-          height = 17
-        },
-        {
-          id = 8,
-          image = "../../../assets/sprites/world/maps/tvland/board/gameshow_couch.png",
-          width = 319,
-          height = 50
-        },
-        {
-          id = 9,
-          image = "../../../assets/sprites/world/maps/tvland/board/gameshow_floor.png",
-          width = 320,
-          height = 81
-        },
-        {
-          id = 10,
-          image = "../../../assets/sprites/world/maps/tvland/board/gameshow_playerpodiums.png",
-          width = 135,
-          height = 18
-        },
-        {
-          id = 11,
-          image = "../../../assets/sprites/world/maps/tvland/board/gameshow_tvframe.png",
-          width = 218,
-          height = 162
-        },
-        {
-          id = 12,
-          image = "../../../assets/sprites/world/maps/tvland/board/gameshow_wall.png",
-          width = 320,
-          height = 240
-        },
-        {
-          id = 13,
-          image = "../../../assets/sprites/world/maps/tvland/board/back.png",
-          width = 195,
-          height = 60
-        },
-        {
-          id = 14,
-          image = "../../../assets/sprites/world/maps/tvland/board/front.png",
-          width = 191,
-          height = 53
-        },
-        {
-          id = 15,
-          image = "../../../assets/sprites/world/maps/tvland/board/put_lemons_in_your_eyes.png",
-          width = 108,
-          height = 74
-        }
-      }
+      filename = "../tilesets/tv_floor/board.tsx",
+      exportfilename = "../tilesets/tv_floor/board.lua"
     },
     {
       name = "arcade-storage",
       firstgid = 57,
-      class = "",
-      tilewidth = 40,
-      tileheight = 40,
-      spacing = 0,
-      margin = 0,
-      columns = 7,
-      image = "../../../assets/sprites/tilesets/arcade_storage.png",
-      imagewidth = 280,
-      imageheight = 320,
-      objectalignment = "unspecified",
-      tilerendersize = "tile",
-      fillmode = "stretch",
-      tileoffset = {
-        x = 0,
-        y = 0
-      },
-      grid = {
-        orientation = "orthogonal",
-        width = 40,
-        height = 40
-      },
-      properties = {},
-      wangsets = {},
-      tilecount = 56,
-      tiles = {}
+      filename = "../tilesets/arcade-storage.tsx"
     }
   },
   layers = {
@@ -570,8 +434,8 @@ return {
           properties = {
             ["cond"] = "not Game:getFlag(\"storagebox2pushed\")",
             ["solid"] = true,
-            ["text1"] = "* (There's a box in the way)",
-            ["text2"] = "* (Its too heavy for you to push)"
+            ["text1"] = "* (There's a box in the way...)",
+            ["text2"] = "* (It's too heavy for you to push.)"
           }
         }
       }

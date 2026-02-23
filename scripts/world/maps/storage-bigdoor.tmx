@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="16" height="17" tilewidth="40" tileheight="40" infinite="0" nextlayerid="14" nextobjectid="193">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="17" tilewidth="40" tileheight="40" infinite="0" nextlayerid="14" nextobjectid="193">
  <editorsettings>
   <export target="storage-bigdoor.lua" format="lua"/>
  </editorsettings>
@@ -152,8 +152,8 @@
    <properties>
     <property name="cond" value="not Game:getFlag(&quot;storagebox2pushed&quot;)"/>
     <property name="solid" type="bool" value="true"/>
-    <property name="text1" value="* (There's a box in the way)"/>
-    <property name="text2" value="* (Its too heavy for you to push)"/>
+    <property name="text1" value="* (There's a box in the way...)"/>
+    <property name="text2" value="* (It's too heavy for you to push.)"/>
    </properties>
   </object>
  </objectgroup>

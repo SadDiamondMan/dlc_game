@@ -102,7 +102,7 @@ function BoardFollower:isMovementEnabled()
 end
 
 function BoardFollower:updatePlayer()
-    --[[local id = Game.party[self.party_slot].id
+    local id = Game.party[self.party_slot].id
 
     if self.p_update < 15 then
         self.p_update = self.p_update + DTMULT
@@ -119,7 +119,7 @@ function BoardFollower:updatePlayer()
         local dd = dx * dx + dy * dy
         if not (dd <= 64 * 64) then self:pathfindTo(p.x, p.y) end
     elseif id == "susie" then
-    end]]
+    end
 end
 
 function BoardFollower:getTarget()
@@ -277,6 +277,9 @@ end
 
 function BoardFollower:isMoving()
     return self.moving_x ~= 0 or self.moving_y ~= 0
+end
+
+function BoardFollower:hurt(amount, hazard)
 end
 
 -- Creates a smoke puff effect.

@@ -10,7 +10,7 @@ return {
   tilewidth = 32,
   tileheight = 32,
   nextlayerid = 12,
-  nextobjectid = 229,
+  nextobjectid = 260,
   properties = {
     ["music"] = "dogcheck/ch3_board3"
   },
@@ -1856,6 +1856,253 @@ return {
           rotation = 0,
           visible = true,
           properties = {}
+        },
+        {
+          id = 233,
+          name = "b3tennablossom",
+          type = "",
+          shape = "rectangle",
+          x = 531,
+          y = 258,
+          width = 52,
+          height = 30,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 237,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 512,
+          y = 896,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 241,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 544,
+          y = 896,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 243,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 576,
+          y = 896,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 244,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 608,
+          y = 896,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 245,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 512,
+          y = 928,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 246,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 544,
+          y = 928,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 247,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 576,
+          y = 928,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 248,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 608,
+          y = 928,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 249,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 512,
+          y = 960,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 250,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 544,
+          y = 960,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 251,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 576,
+          y = 960,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 252,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 608,
+          y = 960,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 253,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 864,
+          y = 928,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 254,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 896,
+          y = 928,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 255,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 928,
+          y = 928,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 256,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 864,
+          y = 960,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 257,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 896,
+          y = 960,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 258,
+          name = "board_grabbablegrass",
+          type = "",
+          shape = "rectangle",
+          x = 928,
+          y = 960,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
         }
       }
     },
@@ -2107,11 +2354,12 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["amount"] = 0,
             ["id"] = "test_item",
             ["name"] = "NESS",
             ["slot"] = "2",
             ["sprite"] = "sword/ui/inventory/test_item",
-            ["text"] = "[color:yellow]NESS[color:reset]!"
+            ["text"] = "YOU GOT [color:yellow]NESS[color:reset]!"
           }
         },
         {
@@ -2164,6 +2412,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["amount"] = 0,
             ["id"] = "cloak",
             ["name"] = "???",
             ["price"] = "9999",
@@ -2171,7 +2420,7 @@ return {
             ["slot"] = 4,
             ["sound"] = "board/itemget_bad",
             ["sprite"] = "sword/party/noelle/walk/down_1",
-            ["text"] = "[color:yellow]HER[color:reset]",
+            ["text"] = "YOU GOT [color:yellow]HER[color:reset]",
             ["waitfortext"] = false
           }
         },
@@ -2254,6 +2503,79 @@ return {
           properties = {
             ["randframe"] = true,
             ["sprite"] = "world/events/sword/cactus"
+          }
+        },
+        {
+          id = 231,
+          name = "board_camsolid",
+          type = "",
+          shape = "rectangle",
+          x = 256,
+          y = 640,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 232,
+          name = "b3gameshow_tvseq",
+          type = "",
+          shape = "rectangle",
+          x = 168,
+          y = 1336,
+          width = 48,
+          height = 30,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 235,
+          name = "board_boulderdropper",
+          type = "",
+          shape = "rectangle",
+          x = 392,
+          y = 264,
+          width = 32,
+          height = 30,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 236,
+          name = "board_camsolid",
+          type = "",
+          shape = "rectangle",
+          x = 256,
+          y = 672,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 259,
+          name = "board_item",
+          type = "",
+          shape = "rectangle",
+          x = 2016,
+          y = 152,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["id"] = "camera",
+            ["name"] = "CAMERA",
+            ["price"] = "0",
+            ["shop"] = { id = 86 },
+            ["slot"] = 3,
+            ["sprite"] = "sword/ui/inventory/camera",
+            ["waitfortext"] = false
           }
         }
       }

@@ -21,7 +21,7 @@ function BoardPointsDisplay:init(x, y, amount)
     self.font = Assets.getFont("8bit")
 
     if not self.display_init then
-        Game.stage.timer:tween(6/30, self, { y = (self.y - 20) })
+        Game.stage.timer:lerpVar(self, "y", self.y, self.y - 20, 24, 6, "out")
 
         if not self.onlyvisual then
             Game.world.timer:after(7/30, function()
@@ -33,6 +33,8 @@ function BoardPointsDisplay:init(x, y, amount)
         
         self.display_init = true
 	end
+	self.true_x = self.x
+	self.true_y = self.y
 end
 
 function BoardPointsDisplay:draw()
@@ -58,12 +60,26 @@ function BoardPointsDisplay:draw()
     love.graphics.print(signer..self.amount, 0, 0 + 2)
 
     if self.amount < 0 then
-        Draw.setColor(Utils.hexToRgb"#473DE3")
+        Draw.setColor(ColorUtils.hexToRGB("#473DE3"))
     else
         Draw.setColor(COLORS.white)
     end
     love.graphics.print(signer..self.amount,  0, 0)
     Draw.setColor(COLORS.white)
+end
+
+function BoardPointsDisplay:preDraw()
+	self.true_x = self.x
+	self.true_y = self.y
+	self.x = MathUtils.round(self.x / 2) * 2
+	self.y = MathUtils.round(self.y / 2) * 2
+	super.preDraw(self)
+end
+
+function BoardPointsDisplay:postDraw()
+	super.postDraw(self)
+	self.x = self.true_x
+	self.y = self.true_y
 end
 
 return BoardPointsDisplay 

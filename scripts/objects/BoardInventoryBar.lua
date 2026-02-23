@@ -28,16 +28,19 @@ function BoardInventoryBar:addItem(item, slot)
     local slot = slot or 0
     local id = item.id
     local spr = item.spr
+    local amt = item.amt
     if self[id] then
         self[id] = self[id] + 1
     end
     if not self.inventory[id] then
         self.inventory[id] = {}
-        self.inventory[id].amount = 1
+        self.inventory[id].amount = amt
         self.inventory[id].sprite = spr
         self.inventory[id].slot = slot
     else
-        self.inventory[id].amount = self.inventory[id].amount + 1
+		if self.inventory[id].amount > 0 then
+			self.inventory[id].amount = self.inventory[id].amount + 1
+		end
     end
 end
 
@@ -45,6 +48,7 @@ function BoardInventoryBar:draw()
     super.draw(self)
 	
     local item_x, item_y = 8, 10
+    local photo_x, photo_y = 8, item_y + 30
     local counter_x, counter_y = item_x + 18, item_y + 34
 	
     for item in pairs(self.inventory) do
@@ -52,7 +56,12 @@ function BoardInventoryBar:draw()
         local slot = item.slot * 48
 
         Draw.draw(Assets.getTexture(item.sprite), item_x, item_y + slot, 0, 2, 2)
-        Draw.draw(Assets.getFrames("sword/ui/inventory/counter")[item.amount], counter_x, counter_y + slot, 0, 2, 2)
+		if item == "camera" and Game:getFlag("photoCount", 0) > 0 then
+			Draw.draw(Assets.getTexture("sword/ui/inventory/photocounter"), photo_x, photo_y + slot, 0, 2, 2)
+			Draw.draw(Assets.getFrames("sword/ui/inventory/counter")[Game:getFlag("photoCount", 0)], counter_x, counter_y + slot, 0, 2, 2)
+		elseif item.amount > 0 then
+			Draw.draw(Assets.getFrames("sword/ui/inventory/counter")[item.amount], counter_x, counter_y + slot, 0, 2, 2)
+		end
     end
 end
 

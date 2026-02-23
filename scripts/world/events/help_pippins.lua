@@ -18,6 +18,10 @@ function help_pippins:init(data)
     self:addChild(self.spr)
     self.hitbox = {0, 0, 32, 32}
 	self.do_sucker = false
+	self.true_x = self.x
+	self.true_y = self.y
+	self.spr_true_x = self.spr.x
+	self.spr_true_y = self.spr.y
 end
 
 function help_pippins:update()
@@ -79,6 +83,26 @@ function help_pippins:draw()
            end
         end
     end
+end
+
+function help_pippins:preDraw()
+	self.true_x = self.x
+	self.true_y = self.y
+	self.x = MathUtils.round(self.x / 2) * 2
+	self.y = MathUtils.round(self.y / 2) * 2
+	self.spr_true_x = self.spr.x
+	self.spr_true_y = self.spr.y
+	self.spr.x = MathUtils.round(self.spr.x / 2) * 2
+	self.spr.y = MathUtils.round(self.spr.y / 2) * 2
+	super.preDraw(self)
+end
+
+function help_pippins:postDraw()
+	super.postDraw(self)
+	self.x = self.true_x
+	self.y = self.true_y
+	self.spr.x = self.spr_true_x
+	self.spr.y = self.spr_true_y
 end
 
 return help_pippins
