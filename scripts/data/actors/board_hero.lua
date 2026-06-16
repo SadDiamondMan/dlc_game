@@ -11,6 +11,9 @@ function actor:onWorldDraw(chara)
 
         local a = chara.sprite.sprite_options[1]
         local b = self.sheet[a]
+
+        if not b then return end
+
         local x, y = b[1] * 16, b[2] * 16
         local s = self.sprite_sheet
 
